@@ -13,7 +13,7 @@ import {
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../Components/Message";
-import { addToCart } from "../actions/cartActions";
+import { addToCart, removeFromCart } from "../actions/cartActions";
 
 const CartScreen = ({ match, location, history }) => {
   const productId = match.params.id;
@@ -31,7 +31,9 @@ const CartScreen = ({ match, location, history }) => {
   const checkoutHandler = () => {
     history.push("/login?redirect=shipping");
   };
-  const removeFromCartHandler = () => console.log("remove");
+  const removeFromCartHandler = (id) => {
+    dispatch(removeFromCart(id));
+  };
   return (
     <Row>
       <Col md={8}>
