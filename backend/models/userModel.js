@@ -27,6 +27,17 @@ const userSchema = mongoose.Schema(
   }
 );
 
+// Mongoose middleware that will encrpyt password on user creation
+userSchema.pre("save", async function (next) {
+  // Checks whether or not the password should be modified
+  if (!this.isModified("password")) {
+    next();
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
+
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
