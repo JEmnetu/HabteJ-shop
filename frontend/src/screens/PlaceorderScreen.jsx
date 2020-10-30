@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CheckoutSteps from "../Components/CheckoutSteps";
 import Message from "../Components/Message";
 import {
@@ -12,13 +12,11 @@ import {
 } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-bootstrap";
+import { createOrder } from "../actions/orderActions";
 
-function placeOrderHandler() {
-  alert("Placed order");
-}
-
-const PlaceorderScreen = () => {
+const PlaceorderScreen = ({ history }) => {
   const cart = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
 
   //Calculate Prices
   cart.itemsPrice = addDecimals(
@@ -37,6 +35,30 @@ const PlaceorderScreen = () => {
     Number(cart.itemsPrice) +
     Number(cart.shippingPrice) +
     Number(cart.taxPrice);
+
+  const orderCreate = useSelector((state) => state.orderCreate);
+  const { order, success, error } = orderCreate;
+
+  useEffect(() => {
+    if (success) {
+      history.push(`/order/${order._id}`);
+    }
+    // eslint - disable - next - line;
+  }, [history, success]);
+
+  const placeOrderHandler = () => {
+    dispatch(
+      createOrder({
+        orderItems: cart.cartItems,
+        shippingAddress: cart.shippingAddress,
+        paymentMethod: cart.paymentMethod,
+        itemsPrice: cart.itemsPrice,
+        shippingPrice: cart.shippingPrice,
+        taxPrice: cart.taxPrice,
+        totalPrice: cart.totalPrice,
+      })
+    );
+  };
   return (
     <>
       <CheckoutSteps step1 step2 step3 step4 />
@@ -115,13 +137,16 @@ const PlaceorderScreen = () => {
                 </Row>
               </ListGroupItem>
               <ListGroupItem>
+                {error ? <Message variant="danger">{error}</Message> : null}
+              </ListGroupItem>
+              <ListGroupItem>
                 <Button
                   type="button"
                   className="btn-block"
                   disabled={cart.cartItems === 0}
                   onClick={placeOrderHandler}
                 >
-                  Click
+                  Place Order
                 </Button>
               </ListGroupItem>
             </ListGroup>
