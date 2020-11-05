@@ -71,8 +71,6 @@ const getOrderByUser = asyncHandler(async (req, res) => {
     "name email"
   );
 
-  console.log(orders);
-
   if (orders) {
     res.json(orders);
   } else {

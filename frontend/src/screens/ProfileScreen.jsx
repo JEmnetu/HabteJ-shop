@@ -66,7 +66,7 @@ const ProfileScreen = ({ location, history }) => {
   return (
     <Row>
       <Col md={3}>
-        <h2>User Profile </h2>
+        {user.isAdmin ? <h2>Admin Profile </h2> : <h2>User Profile </h2>}
         {message && <Message variant="danger">{message}</Message>}
         {error && <Message variant="danger">{error}</Message>}
         {success && <Message variant="success">Profile Updated</Message>}

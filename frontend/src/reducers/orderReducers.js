@@ -12,6 +12,7 @@ import {
   USER_ORDERS_FAIL,
   USER_ORDERS_REQUEST,
   USER_ORDERS_SUCCESS,
+  USER_ORDERS_RESET,
 } from "../constants/orderConstants.js";
 
 export const orderCreateReducer = (state = {}, action) => {
@@ -80,6 +81,10 @@ export const userOrderReducer = (
       return {
         loading: false,
         error: action.payload,
+      };
+    case USER_ORDERS_RESET:
+      return {
+        orders: [],
       };
     default:
       return state;
